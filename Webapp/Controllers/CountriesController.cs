@@ -1,13 +1,21 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Webapp.APIs;
 
 namespace Webapp.Controllers;
 
 public class CountriesController : Controller
 {
+    private CountriesAPI CountriesAPI { get; set; }
+
+    public CountriesController(CountriesAPI countriesAPI)
+    {
+        CountriesAPI = countriesAPI;
+    }
+
     public ActionResult Index()
     {
-        var countries = new List<Country>();
+        List<Country> countries = CountriesAPI.GetAll();
 
         return View(countries);
     }
