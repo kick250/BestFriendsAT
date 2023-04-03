@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Entities;
 using System.Data.SqlClient;
+using Infrastructure.Exceptions;
+using System.Data;
 
 namespace Repository;
 
@@ -21,6 +23,24 @@ public class StatesRepository : IRepository
         }
 
         return states;
+    }
+
+    public State GetById(int id)
+    {
+        State? state = null;
+
+        using (var command = CreateCommand("GetStateById @Id;"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+
+            var data = command.ExecuteReader();
+
+            state = ParseState(data);
+        }
+
+        if (state == null) throw new StateNotFoundException();
+
+        return state;
     }
 
     #region

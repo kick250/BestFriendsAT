@@ -16,4 +16,9 @@ public class StatesService
     {
         return StatesRepository.GetAll();
     }
+
+    public State GetById(int id)
+    {
+        return StatesRepository.GetById(id);
+    }
 }

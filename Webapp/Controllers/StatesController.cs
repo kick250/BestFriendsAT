@@ -22,7 +22,9 @@ public class StatesController : Controller
 
     public ActionResult Details(int id)
     {
-        return View();
+        State state = StatesAPI.GetById(id);
+
+        return View(state);
     }
 
     public ActionResult New()

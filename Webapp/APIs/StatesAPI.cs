@@ -26,4 +26,22 @@ public class StatesAPI : IAPI
         return result;
     }
 
+
+    public State GetById(int id)
+    {
+        var response = Get($"/States/{id}").Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+
+        string jsonResult = response.Content.ReadAsStringAsync().Result;
+
+        State? result = JsonConvert.DeserializeObject<State>(jsonResult);
+
+        if (result == null)
+            throw new Exception("Ocorreu um erro desconhecido");
+
+        return result;
+    }
+
 }

@@ -1,5 +1,6 @@
 ﻿using BusinessServices;
 using Entities;
+using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Webapi.Controllers;
@@ -25,7 +26,14 @@ public class StatesController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult Show(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            State state = StatesService.GetById(id);
+            return Ok(state);
+        } catch (StateNotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost]
