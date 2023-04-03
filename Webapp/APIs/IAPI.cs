@@ -26,6 +26,13 @@ public abstract class IAPI
         return Client.PostAsync(url, MountBodyContent(bodyParams));
     }
 
+    protected Task<HttpResponseMessage> Put(string path, object bodyParams)
+    {
+        string url = BuildUrl(path);
+
+        return Client.PutAsync(url, MountBodyContent(bodyParams));
+    }
+
     protected Task<HttpResponseMessage> Delete(string path)
     {
         string url = BuildUrl(path);

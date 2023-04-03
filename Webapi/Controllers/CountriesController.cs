@@ -43,9 +43,12 @@ namespace Webapi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] string value)
+        public IActionResult Update(int id, [FromBody] Country country)
         {
-            throw new NotImplementedException();
+            country.Id = id;
+            CountriesService.Update(country);
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]

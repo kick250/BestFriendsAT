@@ -27,6 +27,11 @@ public class CountriesService
         CountriesRepository.Create(country);
     }
 
+    public void Update(Country country)
+    {
+        CountriesRepository.Update(country);
+    }
+
     public void DeleteById(int id)
     {
         CountriesRepository.DeleteById(id);

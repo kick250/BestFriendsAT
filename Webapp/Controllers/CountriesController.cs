@@ -75,15 +75,26 @@ public class CountriesController : Controller
     }
 
     [HttpPost]
-    public ActionResult Update(int id)
+    public ActionResult Update([FromForm] Country country, [FromForm] IFormFile? flagImage)
     {
+        if (!ModelState.IsValid) return View("Edit", country);
+
         try
         {
-            return RedirectToAction(nameof(Index));
+            if (flagImage != null)
+            {
+                string flagUrl = ImagesAPI.UploadImage(flagImage);
+                country.FlagUrl = flagUrl;
+            }
+
+            CountriesAPI.Update(country);
+
+            return RedirectToAction("Details", new { id = country.Id });
         }
-        catch
+        catch (Exception ex) 
         {
-            return View();
+            ViewBag.Error = ex.Message;
+            return View("Edit", country);
         }
     }
 

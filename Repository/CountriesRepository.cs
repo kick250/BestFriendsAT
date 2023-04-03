@@ -63,6 +63,18 @@ public class CountriesRepository : IRepository
         }
     }
 
+    public void Update(Country country)
+    {
+        using (var command = CreateCommand(@"UpdateCountry @Id, @Name, @FlagUrl"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, country.Id));
+            command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, country.Name));
+            command.Parameters.Add(CreateParameter("@FlagUrl", SqlDbType.VarChar, country.FlagUrl));
+
+            command.ExecuteNonQuery();
+        }
+    }
+
     #region private 
     private List<Country> ParseCountriesFromCollection(SqlDataReader countriesData)
     {
