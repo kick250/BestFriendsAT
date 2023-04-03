@@ -19,4 +19,12 @@ public class State
             Country = country
         };
     }
+
+    public string GetCountryName()
+    {
+        if (Country == null)
+            return "";
+
+        return Country.Name ?? "";
+    }
 }

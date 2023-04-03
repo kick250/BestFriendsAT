@@ -66,13 +66,35 @@ public class StatesRepository : IRepository
 
         Dictionary<String, String?> data = new Dictionary<string, string?>();
 
-        data["Id"] = stateData["Id"].ToString();
+        data["Id"] = stateData["Id"].ToString();    
         data["Name"] = stateData["Name"].ToString();
         data["FlagUrl"] = stateData["FlagUrl"].ToString();
 
-        State state = State.BuildFromStateData(data, null);
+        State state;
+
+        if (stateData.FieldCount > 4)
+            state = State.BuildFromStateData(data, ParseCountry(stateData));
+        else
+            state = State.BuildFromStateData(data, null);
 
         return state;
+    }
+
+    private Country? ParseCountry(SqlDataReader countryData)
+    {
+        const int idIndex = 4;
+        const int nameIndex = 5;
+        const int flagUrlIndex = 6;
+
+        Dictionary<String, String?> data = new Dictionary<string, string?>();
+
+        data["Id"] = countryData[idIndex].ToString();
+        data["Name"] = countryData[nameIndex].ToString();
+        data["FlagUrl"] = countryData[flagUrlIndex].ToString();
+
+        Country country = Country.BuildFromCountryData(data, null);
+
+        return country;
     }
     #endregion
 }
