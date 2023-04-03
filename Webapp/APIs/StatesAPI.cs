@@ -26,7 +26,6 @@ public class StatesAPI : IAPI
         return result;
     }
 
-
     public State GetById(int id)
     {
         var response = Get($"/States/{id}").Result;
@@ -44,4 +43,11 @@ public class StatesAPI : IAPI
         return result;
     }
 
+    public void DeleteById(int id)
+    {
+        var response = Delete($"/States/{id}").Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
 }

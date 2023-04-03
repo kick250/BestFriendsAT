@@ -65,7 +65,9 @@ public class StatesController : Controller
 
     public ActionResult Delete(int id)
     {
-        return View();
+        State state = StatesAPI.GetById(id);
+
+        return View(state);
     }
 
     [HttpPost]
@@ -73,11 +75,12 @@ public class StatesController : Controller
     {
         try
         {
-            return RedirectToAction(nameof(Index));
+            StatesAPI.DeleteById(id);
+            return RedirectToAction("Index");
         }
         catch
         {
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

@@ -43,6 +43,16 @@ public class StatesRepository : IRepository
         return state;
     }
 
+    public void DeleteById(int id)
+    {
+        using (var command = CreateCommand("DeleteStateById @Id;"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+
+            command.ExecuteNonQuery();
+        }
+    }
+
     #region
     private List<State> ParseStatesFromCollection(SqlDataReader statesData)
     {

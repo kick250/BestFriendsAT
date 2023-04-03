@@ -51,6 +51,7 @@ public class StatesController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        throw new NotImplementedException();
+        StatesService.DeleteById(id);
+        return NoContent();
     }
 }
