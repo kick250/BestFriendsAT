@@ -26,4 +26,29 @@ public class CountriesAPI : IAPI
 
         return result; 
     }
+
+    public Country GetById(int id)
+    {
+        var response = Get($"/Countries/{id}").Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+
+        string jsonResult = response.Content.ReadAsStringAsync().Result;
+
+        Country? result = JsonConvert.DeserializeObject<Country>(jsonResult);
+
+        if (result == null)
+            throw new Exception("Ocorreu um erro desconhecido");
+
+        return result;
+    }
+
+    public void DeleteById(int id)
+    {
+        var response = Delete($"/Countries/{id}").Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
 }

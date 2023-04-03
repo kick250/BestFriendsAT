@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Entities;
 using System.Data.SqlClient;
+using Infrastructure.Exceptions;
+using System.Data;
 
 namespace Repository;
 public class CountriesRepository : IRepository
@@ -20,6 +22,34 @@ public class CountriesRepository : IRepository
         }
 
         return countries;
+    }
+
+    public Country GetById(int id) 
+    {
+        Country? country = null;
+
+        using (var command = CreateCommand("GetCountryById @Id;"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+
+            var data = command.ExecuteReader();
+
+            country = ParseCountry(data);
+        }
+
+        if (country == null) throw new CountryNotFoundException();
+
+        return country;
+    }
+
+    public void DeleteById(int id)
+    {
+        using (var command = CreateCommand("DeleteCountry @Id;"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+
+            command.ExecuteNonQuery();
+        }
     }
 
     #region private 
@@ -48,9 +78,8 @@ public class CountriesRepository : IRepository
         data["Id"] = countryData["Id"].ToString();
         data["Name"] = countryData["Name"].ToString();
         data["FlagUrl"] = countryData["FlagUrl"].ToString();
-        //data["States"] = countryData["States"].ToString();
 
-        Country country = Country.BuildFromCountryData(data);
+        Country country = Country.BuildFromCountryData(data, null);
 
         return country;
     }

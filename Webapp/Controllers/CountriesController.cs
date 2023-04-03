@@ -22,7 +22,14 @@ public class CountriesController : Controller
 
     public ActionResult Details(int id)
     {
-        return View();
+        try
+        {
+            Country country = CountriesAPI.GetById(id);
+            return View(country);
+        } catch (Exception)
+        {
+            return RedirectToAction("Index");
+        }
     }
 
     public ActionResult New()
@@ -45,7 +52,15 @@ public class CountriesController : Controller
 
     public ActionResult Edit(int id)
     {
-        return View();
+        try
+        {
+            Country country = CountriesAPI.GetById(id);
+            return View(country);
+        }
+        catch (Exception)
+        {
+            return RedirectToAction("Index");
+        }
     }
 
     [HttpPost]
@@ -63,7 +78,15 @@ public class CountriesController : Controller
 
     public ActionResult Delete(int id)
     {
-        return View();
+        try
+        {
+            Country country = CountriesAPI.GetById(id);
+            return View(country);
+        }
+        catch (Exception)
+        {
+            return RedirectToAction("Index");
+        }
     }
 
     [HttpPost]
@@ -71,10 +94,13 @@ public class CountriesController : Controller
     {
         try
         {
-            return RedirectToAction(nameof(Index));
+            CountriesAPI.DeleteById(id);
+
+            return RedirectToAction("Index");
         }
-        catch
+        catch (Exception e) 
         {
+            ViewBag.Error = e.Message;
             return View();
         }
     }

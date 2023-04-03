@@ -2,8 +2,5 @@
 
 public class FriendsNotFoundException : Exception
 {
-    public string GetMessage()
-    {
-        return "Esse amigo não foi encontrado.";
-    }
+     public override string Message => "Esse amigo não foi encontrado.";
 }

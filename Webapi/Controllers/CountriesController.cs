@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BusinessServices;
+using Infrastructure.Exceptions;
 
 namespace Webapi.Controllers
 {
@@ -15,7 +16,7 @@ namespace Webapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Index()
         {
             return Ok(CountriesService.GetAll());
         }
@@ -23,7 +24,13 @@ namespace Webapi.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return Ok(CountriesService.GetById(id));
+            } catch (CountryNotFoundException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
         }
 
         [HttpPost]
@@ -41,7 +48,9 @@ namespace Webapi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            throw new NotImplementedException();
+            CountriesService.DeleteById(id);
+
+            return Ok();
         }
     }
 }

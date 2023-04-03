@@ -2,8 +2,5 @@
 
 public class StringConnectionEmptyException : Exception
 {
-    public string GetMessage()
-    {
-        return "A string de conexão não foi encontrada.";
-    }
+    public override string Message => "A string de conexão não foi encontrada.";
 }

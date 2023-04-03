@@ -16,4 +16,14 @@ public class CountriesService
     {
         return CountriesRepository.GetAll();
     }
+
+    public Country GetById(int id)
+    {
+        return CountriesRepository.GetById(id);
+    }
+
+    public void DeleteById(int id)
+    {
+        CountriesRepository.DeleteById(id);
+    }
 }
