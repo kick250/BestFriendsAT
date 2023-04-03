@@ -51,4 +51,12 @@ public class CountriesAPI : IAPI
         if (!response.IsSuccessStatusCode)
             throw new APIErrorException(response);
     }
+
+    public void Create(Country country)
+    {
+        var response = Post("/Countries", country).Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
 }

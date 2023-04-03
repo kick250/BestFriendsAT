@@ -22,6 +22,11 @@ public class CountriesService
         return CountriesRepository.GetById(id);
     }
 
+    public void Create(Country country)
+    {
+        CountriesRepository.Create(country);
+    }
+
     public void DeleteById(int id)
     {
         CountriesRepository.DeleteById(id);

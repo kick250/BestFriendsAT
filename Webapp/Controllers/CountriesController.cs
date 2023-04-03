@@ -7,10 +7,12 @@ namespace Webapp.Controllers;
 public class CountriesController : Controller
 {
     private CountriesAPI CountriesAPI { get; set; }
+    private ImagesAPI ImagesAPI { get; set; }
 
-    public CountriesController(CountriesAPI countriesAPI)
+    public CountriesController(CountriesAPI countriesAPI, ImagesAPI imagesAPI)
     {
         CountriesAPI = countriesAPI;
+        ImagesAPI = imagesAPI;
     }
 
     public ActionResult Index()
@@ -38,15 +40,24 @@ public class CountriesController : Controller
     }
 
     [HttpPost]
-    public ActionResult Create()
+    public ActionResult Create([FromForm] Country country, [FromForm] IFormFile flagImage)
     {
+        if (!ModelState.IsValid) return View("New", country);
+
         try
         {
-            return RedirectToAction(nameof(Index));
+            string flagUrl = ImagesAPI.UploadImage(flagImage);
+
+            country.FlagUrl = flagUrl;
+
+            CountriesAPI.Create(country);
+
+            return RedirectToAction("Index");
         }
-        catch
+        catch (Exception e)
         {
-            return View();
+            ViewBag.Error = e.Message;
+            return View("New", country);
         }
     }
 

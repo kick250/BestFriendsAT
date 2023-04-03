@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BusinessServices;
 using Infrastructure.Exceptions;
+using Entities;
 
 namespace Webapi.Controllers
 {
@@ -34,9 +35,11 @@ namespace Webapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] string value)
+        public IActionResult Post([FromBody] Country country)
         {
-            throw new NotImplementedException();
+            CountriesService.Create(country);
+
+            return Created("", country);
         }
 
         [HttpPut("{id}")]
