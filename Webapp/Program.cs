@@ -10,6 +10,7 @@ public class Program
         // Add services to the container.
         builder.Services.AddScoped<CountriesAPI>();
         builder.Services.AddScoped<ImagesAPI>();
+        builder.Services.AddScoped<StatesAPI>();
 
         builder.Services.AddControllersWithViews();
 

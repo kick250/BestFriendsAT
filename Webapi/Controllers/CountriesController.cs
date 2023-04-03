@@ -23,7 +23,7 @@ namespace Webapi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Show(int id)
         {
             try
             {
