@@ -22,6 +22,11 @@ public class StatesService
         return StatesRepository.GetById(id);
     }
 
+    public void Create(State state)
+    {
+        StatesRepository.Create(state);
+    }
+
     public void DeleteById(int id)
     {
         StatesRepository.DeleteById(id);

@@ -43,6 +43,14 @@ public class StatesAPI : IAPI
         return result;
     }
 
+    public void Create(State state) 
+    {
+        var response = Post($"/States", state).Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
+
     public void DeleteById(int id)
     {
         var response = Delete($"/States/{id}").Result;

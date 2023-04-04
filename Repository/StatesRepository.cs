@@ -43,6 +43,18 @@ public class StatesRepository : IRepository
         return state;
     }
 
+    public void Create(State state)
+    {
+        using (var command = CreateCommand(@"CreateState @Name, @FlagUrl, @CountryId;"))
+        {
+            command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, state.Name));
+            command.Parameters.Add(CreateParameter("@FlagUrl", SqlDbType.VarChar, state.FlagUrl));
+            command.Parameters.Add(CreateParameter("@CountryId", SqlDbType.VarChar, state.CountryId));
+
+            command.ExecuteNonQuery();
+        }
+    }
+
     public void DeleteById(int id)
     {
         using (var command = CreateCommand("DeleteStateById @Id;"))
@@ -79,18 +91,21 @@ public class StatesRepository : IRepository
         data["Id"] = stateData["Id"].ToString();    
         data["Name"] = stateData["Name"].ToString();
         data["FlagUrl"] = stateData["FlagUrl"].ToString();
+        data["CountryId"] = stateData["CountryId"].ToString();
 
         State state;
 
         if (stateData.FieldCount > 4)
+        {
             state = State.BuildFromStateData(data, ParseCountry(stateData));
+        }
         else
             state = State.BuildFromStateData(data, null);
 
         return state;
     }
 
-    private Country? ParseCountry(SqlDataReader countryData)
+    private Country ParseCountry(SqlDataReader countryData)
     {
         const int idIndex = 4;
         const int nameIndex = 5;

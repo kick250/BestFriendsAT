@@ -1,4 +1,5 @@
-﻿@model Entities.State
+﻿@using Entities;
+@model State
 
 @{
     ViewData["Title"] = "New";
@@ -10,22 +11,26 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="New">
+        <form asp-action="Create" asp-controller="States" EncType="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FlagUrl" class="control-label"></label>
-                <input asp-for="FlagUrl" class="form-control" />
-                <span asp-validation-for="FlagUrl" class="text-danger"></span>
+                <label asp-for="CountryId" class="control-label">Pais</label>
+                <select asp-for="CountryId" class="form-control">
+                    <option value="" selected disabled>Escolher pais</option>
+                    @foreach (Country country in ViewBag.countries)
+                    {
+                        <option value="@country.Id">@country.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="flagImage" class="control-label">Bandeira</label>
+                <input id="flagImage" name="flagImage" type="file" class="form-control" required accept="image /png, image /jpeg" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
