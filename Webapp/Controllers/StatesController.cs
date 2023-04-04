@@ -24,9 +24,11 @@ public class StatesController : Controller
         return View(countries);
     }
 
-    public ActionResult Details(int id)
+    public ActionResult Details(int? id)
     {
-        State state = StatesAPI.GetById(id);
+        if (id == null) return RedirectToAction("Index");
+
+        State state = StatesAPI.GetById((int)id);
 
         return View(state);
     }
@@ -53,27 +55,39 @@ public class StatesController : Controller
         catch (Exception ex)
         {
             ViewBag.Error = ex.Message;
-            return View(state);
+            return View("New", state);
         }
     }
 
     public ActionResult Edit(int id)
     {
+        ViewBag.countries = CountriesAPI.GetAll(); 
         State state = StatesAPI.GetById(id);
 
         return View(state);
     }
 
     [HttpPost]
-    public ActionResult Update(int id)
+    public ActionResult Update([FromForm] State state, IFormFile? flagImage)
     {
+        if (!ModelState.IsValid) return View("Edit", state);
+
         try
         {
-            return RedirectToAction(nameof(Index));
+            if (flagImage != null)
+            {
+                string flagUrl = ImagesAPI.UploadImage(flagImage);
+                state.FlagUrl = flagUrl;
+            }
+
+            StatesAPI.Update(state);
+
+            return RedirectToAction("Details", new { id = state.Id });
         }
-        catch
+        catch (Exception ex)
         {
-            return View();
+            ViewBag.Errors = ex.Message;
+            return View("Edit", state);
         }
     }
 

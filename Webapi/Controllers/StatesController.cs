@@ -37,7 +37,7 @@ public class StatesController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] State state)
+    public IActionResult Create([FromBody] State state)
     {
         StatesService.Create(state);
 
@@ -45,9 +45,13 @@ public class StatesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] string value)
+    public IActionResult Update(int id, [FromBody] State state)
     {
-        throw new NotImplementedException();
+        state.Id = id;
+
+        StatesService.Update(state);
+
+        return Ok(state);
     }
 
     [HttpDelete("{id}")]

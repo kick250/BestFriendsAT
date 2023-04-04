@@ -51,6 +51,14 @@ public class StatesAPI : IAPI
             throw new APIErrorException(response);
     }
 
+    public void Update(State state)
+    {
+        var response = Put($"/States/{state.Id}", state).Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
+
     public void DeleteById(int id)
     {
         var response = Delete($"/States/{id}").Result;

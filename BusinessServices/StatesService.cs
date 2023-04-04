@@ -27,6 +27,11 @@ public class StatesService
         StatesRepository.Create(state);
     }
 
+    public void Update(State state) 
+    {
+        StatesRepository.Update(state);
+    }
+
     public void DeleteById(int id)
     {
         StatesRepository.DeleteById(id);

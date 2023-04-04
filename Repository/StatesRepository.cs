@@ -3,6 +3,7 @@ using Entities;
 using System.Data.SqlClient;
 using Infrastructure.Exceptions;
 using System.Data;
+using System.Diagnostics.Metrics;
 
 namespace Repository;
 
@@ -49,7 +50,20 @@ public class StatesRepository : IRepository
         {
             command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, state.Name));
             command.Parameters.Add(CreateParameter("@FlagUrl", SqlDbType.VarChar, state.FlagUrl));
-            command.Parameters.Add(CreateParameter("@CountryId", SqlDbType.VarChar, state.CountryId));
+            command.Parameters.Add(CreateParameter("@CountryId", SqlDbType.Int, state.CountryId));
+
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public void Update(State state)
+    {
+        using (var command = CreateCommand(@"UpdateState @Id, @Name, @FlagUrl, @CountryId"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, state.Id));
+            command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, state.Name));
+            command.Parameters.Add(CreateParameter("@FlagUrl", SqlDbType.VarChar, state.FlagUrl));
+            command.Parameters.Add(CreateParameter("@CountryId", SqlDbType.Int, state.CountryId));
 
             command.ExecuteNonQuery();
         }
