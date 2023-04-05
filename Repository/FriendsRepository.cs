@@ -1,122 +1,120 @@
 ﻿using Entities;
-using Infrastructure.Exceptions;
 using Microsoft.Extensions.Configuration;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace Repository;
 
 public class FriendsRepository : IRepository
 {
-    private static string StringConnection { get; set; } = "";
-
     public FriendsRepository(IConfiguration configuration)
         : base(configuration) { }
 
     public List<Friend> GetAll()
     {
-        List<Friend> peoples = new List<Friend>();
+        List<Friend> friends = new List<Friend>();
 
-        using (var command = CreateCommand("GetAllPeoples;"))
+        using (var command = CreateCommand("GetAllFriends;"))
         {
             var data = command.ExecuteReader();
 
-            peoples = ParsePeoplesFromCollection(data);
+            friends = ParseFriendsFromCollection(data);
         }
 
-        return peoples;
+        return friends;
     }
 
-    public Friend GetById(int id)
-    {
-        Friend? people = null;
+    //public Friend GetById(int id)
+    //{
+    //    Friend? people = null;
 
-        using (var command = CreateCommand("GetPeopleById @Id;"))
-        {
-            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+    //    using (var command = CreateCommand("GetPeopleById @Id;"))
+    //    {
+    //        command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
 
-            var data = command.ExecuteReader();
+    //        var data = command.ExecuteReader();
 
-            people = ParsePeople(data);
-        }
+    //        people = ParsePeople(data);
+    //    }
 
-        if (people == null) throw new FriendsNotFoundException();
+    //    if (people == null) throw new FriendsNotFoundException();
 
-        return people;
-    }
+    //    return people;
+    //}
 
-    public void DeleteById(int id)
-    {
-        using (var command = CreateCommand("DeletePeople @Id;"))
-        {
-            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+    //public void DeleteById(int id)
+    //{
+    //    using (var command = CreateCommand("DeletePeople @Id;"))
+    //    {
+    //        command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
 
-            command.ExecuteNonQuery();
-        }
-    }
+    //        command.ExecuteNonQuery();
+    //    }
+    //}
 
-    public void Create(Friend people)
-    {
-        using (var command = CreateCommand(@"CreatePeople @Name, @LastName, @Email, @Phone, @Birthdate;"))
-        {
-            command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, people.Name));
-            command.Parameters.Add(CreateParameter("@LastName", SqlDbType.VarChar, people.LastName));
-            command.Parameters.Add(CreateParameter("@Email", SqlDbType.VarChar, people.Email));
-            command.Parameters.Add(CreateParameter("@Phone", SqlDbType.VarChar, people.Phone));
-            command.Parameters.Add(CreateParameter("@Birthdate", SqlDbType.Date, people.Birthdate));
+    //public void Create(Friend people)
+    //{
+    //    using (var command = CreateCommand(@"CreatePeople @Name, @LastName, @Email, @Phone, @Birthdate;"))
+    //    {
+    //        command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, people.Name));
+    //        command.Parameters.Add(CreateParameter("@LastName", SqlDbType.VarChar, people.LastName));
+    //        command.Parameters.Add(CreateParameter("@Email", SqlDbType.VarChar, people.Email));
+    //        command.Parameters.Add(CreateParameter("@Phone", SqlDbType.VarChar, people.Phone));
+    //        command.Parameters.Add(CreateParameter("@Birthdate", SqlDbType.Date, people.Birthdate));
 
-            command.ExecuteNonQuery();
-        }
-    }
+    //        command.ExecuteNonQuery();
+    //    }
+    //}
 
-    public void Update(int id, Friend people)
-    {
-        using (var command = CreateCommand(@"UpdatePeople @Id, @Name, @LastName, @Email, @Phone, @Birthdate;"))
-        {
-            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
-            command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, people.Name));
-            command.Parameters.Add(CreateParameter("@LastName", SqlDbType.VarChar, people.LastName));
-            command.Parameters.Add(CreateParameter("@Email", SqlDbType.VarChar, people.Email));
-            command.Parameters.Add(CreateParameter("@Phone", SqlDbType.VarChar, people.Phone));
-            command.Parameters.Add(CreateParameter("@Birthdate", SqlDbType.Date, people.Birthdate));
+    //public void Update(int id, Friend people)
+    //{
+    //    using (var command = CreateCommand(@"UpdatePeople @Id, @Name, @LastName, @Email, @Phone, @Birthdate;"))
+    //    {
+    //        command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+    //        command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, people.Name));
+    //        command.Parameters.Add(CreateParameter("@LastName", SqlDbType.VarChar, people.LastName));
+    //        command.Parameters.Add(CreateParameter("@Email", SqlDbType.VarChar, people.Email));
+    //        command.Parameters.Add(CreateParameter("@Phone", SqlDbType.VarChar, people.Phone));
+    //        command.Parameters.Add(CreateParameter("@Birthdate", SqlDbType.Date, people.Birthdate));
 
-            command.ExecuteNonQuery();
-        }
-    }
+    //        command.ExecuteNonQuery();
+    //    }
+    //}
 
     // private
 
-    private List<Friend> ParsePeoplesFromCollection(SqlDataReader peoplesData)
+    private List<Friend> ParseFriendsFromCollection(SqlDataReader friendsData)
     {
-        List<Friend> peoples = new List<Friend>();
+        List<Friend> friends = new List<Friend>();
 
-        if (peoplesData.HasRows)
+        if (friendsData.HasRows)
         {
-            Friend? people;
-            while ((people = ParsePeople(peoplesData)) != null)
+            Friend? friend;
+            while ((friend = ParseFriend(friendsData)) != null)
             {
-                peoples.Add(people);
+                friends.Add(friend);
             }
         }
 
-        return peoples;
+        return friends;
     }
 
-    private Friend? ParsePeople(SqlDataReader peopleData)
+    private Friend? ParseFriend(SqlDataReader friendData)
     {
-        if (!peopleData.Read()) return null;
+        if (!friendData.Read()) return null;
 
         Dictionary<String, String?> data = new Dictionary<string, string?>();
 
-        data["Id"] = peopleData["Id"].ToString();
-        data["Name"] = peopleData["Name"].ToString();
-        data["LastName"] = peopleData["LastName"].ToString();
-        data["Email"] = peopleData["Email"].ToString();
-        data["Phone"] = peopleData["Phone"].ToString();
-        data["Birthdate"] = peopleData["Birthdate"].ToString();
+        data["Id"] = friendData["Id"].ToString();
+        data["Name"] = friendData["Name"].ToString();
+        data["LastName"] = friendData["LastName"].ToString();
+        data["Email"] = friendData["Email"].ToString();
+        data["Phone"] = friendData["Phone"].ToString();
+        data["Birthdate"] = friendData["Birthdate"].ToString();
+        data["PhotoUrl"] = friendData["PhotoUrl"].ToString();
+        data["StateId"] = friendData["StateId"].ToString();
 
-        //Friend people = Friend.BuildFromPeopleData(data);
+        Friend friend = Friend.BuildFromFriendData(data, null, null, null);
 
-        return new Friend();
+        return friend;
     }
 }

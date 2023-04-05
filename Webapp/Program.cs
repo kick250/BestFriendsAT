@@ -11,6 +11,7 @@ public class Program
         builder.Services.AddScoped<CountriesAPI>();
         builder.Services.AddScoped<ImagesAPI>();
         builder.Services.AddScoped<StatesAPI>();
+        builder.Services.AddScoped<FriendsAPI>();
 
         builder.Services.AddControllersWithViews();
 

@@ -19,9 +19,9 @@ public class StatesController : Controller
 
     public ActionResult Index()
     {
-        List<State> countries = StatesAPI.GetAll();
+        List<State> states = StatesAPI.GetAll();
 
-        return View(countries);
+        return View(states);
     }
 
     public ActionResult Details(int? id)

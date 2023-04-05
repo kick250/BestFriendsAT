@@ -1,20 +1,32 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Webapp.APIs;
 
 namespace Webapp.Controllers;
 
 public class FriendsController : Controller
 {
-    public ActionResult Index()
-    {
-        var countries = new List<Friend>();
+    private FriendsAPI FriendsAPI { get; set; }
 
-        return View(countries);
+    public FriendsController(FriendsAPI friendsAPI)
+    {
+        FriendsAPI = friendsAPI;
     }
 
-    public ActionResult Details(int id)
+    public ActionResult Index()
     {
-        return View();
+        List<Friend> friends = FriendsAPI.GetAll();
+
+        return View(friends);
+    }
+
+    public ActionResult Details(int? id)
+    {
+        if (id == null) return RedirectToAction("Index");
+
+        Friend friend = FriendsAPI.GetById((int)id);
+
+        return View(friend);
     }
 
     public ActionResult New()

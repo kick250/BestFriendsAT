@@ -15,6 +15,8 @@ public class Program
         builder.Services.AddScoped<CountriesService>();
         builder.Services.AddScoped<StatesRepository>();
         builder.Services.AddScoped<StatesService>();
+        builder.Services.AddScoped<FriendsRepository>();
+        builder.Services.AddScoped<FriendsService>();
 
 
         builder.Services.AddControllers();
