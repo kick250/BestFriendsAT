@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Exceptions;
 
-public class FriendsNotFoundException : Exception
+public class FriendNotFoundException : Exception
 {
      public override string Message => "Esse amigo não foi encontrado.";
 }

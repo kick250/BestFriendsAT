@@ -16,4 +16,9 @@ public class FriendsService
     {
         return FriendsRepository.GetAll();
     }
+
+    public Friend GetById(int id)
+    {
+        return FriendsRepository.GetById(id);
+    }
 }

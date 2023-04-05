@@ -3,12 +3,14 @@ using Entities;
 using System.Data.SqlClient;
 using Infrastructure.Exceptions;
 using System.Data;
-using System.Diagnostics.Metrics;
+using Repository.Factories;
 
 namespace Repository;
 
 public class StatesRepository : IRepository
 {
+    private const int STATE_COLUMNS_QUANTITY = 4;
+
     public StatesRepository(IConfiguration configuration)
         : base(configuration) { }
 
@@ -100,40 +102,35 @@ public class StatesRepository : IRepository
     {
         if (!stateData.Read()) return null;
 
-        Dictionary<String, String?> data = new Dictionary<string, string?>();
+        var StatesFactory = new StatesFactory();
 
-        data["Id"] = stateData["Id"].ToString();    
-        data["Name"] = stateData["Name"].ToString();
-        data["FlagUrl"] = stateData["FlagUrl"].ToString();
-        data["CountryId"] = stateData["CountryId"].ToString();
-
-        State state;
-
-        if (stateData.FieldCount > 4)
-        {
-            state = State.BuildFromStateData(data, ParseCountry(stateData));
-        }
-        else
-            state = State.BuildFromStateData(data, null);
+        State state = StatesFactory.BuildFromProperties(
+            stateData["Id"].ToString(),
+            stateData["Name"].ToString(),
+            stateData["FlagUrl"].ToString(),
+            stateData["CountryId"].ToString(),
+            ParseCountry(stateData)
+        );
 
         return state;
     }
 
-    private Country ParseCountry(SqlDataReader countryData)
+    private Country? ParseCountry(SqlDataReader countryData)
     {
+        if (countryData.FieldCount <= STATE_COLUMNS_QUANTITY) return null;
+
         const int idIndex = 4;
         const int nameIndex = 5;
         const int flagUrlIndex = 6;
 
-        Dictionary<String, String?> data = new Dictionary<string, string?>();
+        var factory = new CountriesFactory();
 
-        data["Id"] = countryData[idIndex].ToString();
-        data["Name"] = countryData[nameIndex].ToString();
-        data["FlagUrl"] = countryData[flagUrlIndex].ToString();
-
-        Country country = Country.BuildFromCountryData(data, null);
-
-        return country;
+        return factory.BuildFromProperties(
+            countryData[idIndex].ToString(),
+            countryData[nameIndex].ToString(),
+            countryData[flagUrlIndex].ToString(), 
+            null
+        );
     }
     #endregion
 }

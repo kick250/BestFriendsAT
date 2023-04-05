@@ -26,7 +26,7 @@ public class FriendsAPI : IAPI
         return result;
     }
 
-    public Friend GetById(string id) 
+    public Friend GetById(int id) 
     {
         var response = Get($"/Friends/{id}").Result;
 

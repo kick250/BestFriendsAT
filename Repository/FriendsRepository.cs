@@ -1,11 +1,16 @@
 ﻿using Entities;
+using Infrastructure.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Repository.Factories;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Repository;
 
 public class FriendsRepository : IRepository
 {
+    private const int FRIENDS_COLUMNS_QUANTITY = 8;
+
     public FriendsRepository(IConfiguration configuration)
         : base(configuration) { }
 
@@ -23,23 +28,23 @@ public class FriendsRepository : IRepository
         return friends;
     }
 
-    //public Friend GetById(int id)
-    //{
-    //    Friend? people = null;
+    public Friend GetById(int id)
+    {
+        Friend? friend = null;
 
-    //    using (var command = CreateCommand("GetPeopleById @Id;"))
-    //    {
-    //        command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+        using (var command = CreateCommand("GetFriendById @Id;"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
 
-    //        var data = command.ExecuteReader();
+            var data = command.ExecuteReader();
 
-    //        people = ParsePeople(data);
-    //    }
+            friend = ParseFriend(data);
+        }
 
-    //    if (people == null) throw new FriendsNotFoundException();
+        if (friend == null) throw new FriendNotFoundException();
 
-    //    return people;
-    //}
+        return friend;
+    }
 
     //public void DeleteById(int id)
     //{
@@ -82,6 +87,7 @@ public class FriendsRepository : IRepository
 
     // private
 
+    #region private 
     private List<Friend> ParseFriendsFromCollection(SqlDataReader friendsData)
     {
         List<Friend> friends = new List<Friend>();
@@ -102,19 +108,65 @@ public class FriendsRepository : IRepository
     {
         if (!friendData.Read()) return null;
 
-        Dictionary<String, String?> data = new Dictionary<string, string?>();
+        var friendsFactory = new FriendsFactory();
 
-        data["Id"] = friendData["Id"].ToString();
-        data["Name"] = friendData["Name"].ToString();
-        data["LastName"] = friendData["LastName"].ToString();
-        data["Email"] = friendData["Email"].ToString();
-        data["Phone"] = friendData["Phone"].ToString();
-        data["Birthdate"] = friendData["Birthdate"].ToString();
-        data["PhotoUrl"] = friendData["PhotoUrl"].ToString();
-        data["StateId"] = friendData["StateId"].ToString();
+        Country? country = ParseCountry(friendData);
+        State? state = ParseState(friendData, country);
 
-        Friend friend = Friend.BuildFromFriendData(data, null, null, null);
+        Friend friend = friendsFactory.BuildFromProperties(
+            friendData["Id"].ToString(),
+            friendData["Name"].ToString(),
+            friendData["LastName"].ToString(),
+            friendData["Email"].ToString(),
+            friendData["Phone"].ToString(),
+            friendData["Birthdate"].ToString(),
+            friendData["PhotoUrl"].ToString(),
+            friendData["StateId"].ToString(),
+            null,
+            country,
+            state
+        );
 
         return friend;
     }
+
+    private Country? ParseCountry(SqlDataReader countryData)
+    {
+        if (countryData.FieldCount <= FRIENDS_COLUMNS_QUANTITY) return null;
+
+        const int idIndex = 12;
+        const int nameIndex = 13;
+        const int flagUrlIndex = 14;
+
+        var factory = new CountriesFactory();
+
+        return factory.BuildFromProperties(
+            countryData[idIndex].ToString(),
+            countryData[nameIndex].ToString(),
+            countryData[flagUrlIndex].ToString(),
+            null
+        );
+    }
+
+    private State? ParseState(SqlDataReader stateData, Country? country)
+    {
+        if (stateData.FieldCount <= FRIENDS_COLUMNS_QUANTITY) return null;
+
+        const int idIndex = 8;
+        const int nameIndex = 9;
+        const int flagUrlIndex = 10;
+        const int countryIdIndex = 11;
+
+        var factory = new StatesFactory();
+
+        return factory.BuildFromProperties(
+            stateData[idIndex].ToString(),
+            stateData[nameIndex].ToString(),
+            stateData[flagUrlIndex].ToString(),
+            stateData[countryIdIndex].ToString(),
+            country
+        );
+    }
+
+    #endregion
 }

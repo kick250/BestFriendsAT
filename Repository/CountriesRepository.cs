@@ -3,6 +3,7 @@ using Entities;
 using System.Data.SqlClient;
 using Infrastructure.Exceptions;
 using System.Data;
+using Repository.Factories;
 
 namespace Repository;
 public class CountriesRepository : IRepository
@@ -96,13 +97,14 @@ public class CountriesRepository : IRepository
     {
         if (!countryData.Read()) return null;
 
-        Dictionary<String, String?> data = new Dictionary<string, string?>();
+        var countryFactory = new CountriesFactory();
 
-        data["Id"] = countryData["Id"].ToString();
-        data["Name"] = countryData["Name"].ToString();
-        data["FlagUrl"] = countryData["FlagUrl"].ToString();
-
-        Country country = Country.BuildFromCountryData(data, null);
+        Country country = countryFactory.BuildFromProperties(
+            countryData["Id"].ToString(),
+            countryData["Name"].ToString(),
+            countryData["FlagUrl"].ToString(),
+            null
+        );
 
         return country;
     }

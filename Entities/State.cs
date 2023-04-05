@@ -12,21 +12,6 @@ public class State
     public int? CountryId { get; set; }
     public Country? Country { get; set; }
 
-    public static State BuildFromStateData(Dictionary<string, string?> data, Country? country)
-    {
-        string id = data["Id"] ?? "";
-        string countryId = data["CountryId"] ?? "";
-
-        return new State()
-        {
-            Id = int.Parse(id),
-            Name = data["Name"],
-            FlagUrl = data["FlagUrl"],
-            CountryId = int.Parse(countryId),
-            Country = country
-        };
-    }
-
     public string GetCountryName()
     {
         if (Country == null)

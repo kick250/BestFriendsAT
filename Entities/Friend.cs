@@ -14,26 +14,17 @@ public class Friend
     public Country? Country { get; set; }
     public State? State { get; set; }
 
-    
-    public static Friend BuildFromFriendData(Dictionary<String, String?> data, List<Friend>? Friends, Country? Country, State? State)
+    public string GetCountryName()
     {
-        string id = data["Id"] ?? "";
-        string stateId = data["StateId"] ?? "";
-        string birthdate = data["Birthdate"] ?? "";
+        if (Country == null) return "";
 
-        return new Friend()
-        {
-            Id = int.Parse(id),
-            Name = data["Name"],
-            LastName = data["LastName"],
-            Email = data["Email"],
-            Phone = data["Phone"],
-            Birthdate = DateTime.Parse(birthdate),
-            PhotoUrl = data["PhotoUrl"],
-            StateId = int.Parse(stateId),
-            Friends = Friends,
-            Country = Country,
-            State = State
-        };
+        return Country.Name ?? "";
+    }
+
+    public string GetStateName()
+    {
+        if (State == null) return "";
+
+        return State.Name ?? "";
     }
 }

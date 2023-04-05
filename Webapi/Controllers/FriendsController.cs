@@ -24,7 +24,7 @@ public class FriendsController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult Show(int id)
     {
-        throw new NotImplementedException();
+        return Ok(FriendsService.GetById(id));
     }
 
     [HttpPost]
