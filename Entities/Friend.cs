@@ -1,12 +1,19 @@
-﻿namespace Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Entities;
 
 public class Friend
 {
     public int? Id { get; set; }
+    [Required(ErrorMessage = "Um amigo precisa de um nome.")]
     public string? Name { get; set; }
+    [Required(ErrorMessage = "Um amigo precisa de um sobrenome.")]
     public string? LastName { get; set; }
+    [Required(ErrorMessage = "Um amigo precisa de um email.")]
     public string? Email { get; set; }
+    [Required(ErrorMessage = "Um amigo precisa de um telefone.")]
     public string? Phone { get; set; }
+    [Required(ErrorMessage = "Um amigo precisa de uma data de nascimento.")]
     public DateTime? Birthdate { get; set; }
     public string? PhotoUrl { get; set; }
     public int? StateId { get; set; }

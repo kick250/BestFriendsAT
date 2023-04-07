@@ -1,5 +1,6 @@
 ﻿using Repository;
 using Entities;
+using Infrastructure.Exceptions;
 
 namespace BusinessServices;
 
@@ -21,4 +22,26 @@ public class FriendsService
     {
         return FriendsRepository.GetById(id);
     }
+
+    public void Create(Friend friend)
+    {
+        if (IsEmailInUse(friend.Email ?? ""))
+            throw new Exception("Esse email já está em uso.");
+
+        FriendsRepository.Create(friend);
+    }
+
+    #region private 
+
+    private bool IsEmailInUse(string email)
+    {
+        try
+        {
+            return FriendsRepository.GetByEmail(email) != null;
+        } catch (FriendNotFoundException)
+        {
+            return false;
+        }
+    }
+    #endregion
 }

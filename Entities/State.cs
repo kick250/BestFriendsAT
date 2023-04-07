@@ -19,4 +19,9 @@ public class State
 
         return Country.Name ?? "";
     }
+
+    public string ToOption()
+    {
+        return $"{GetCountryName()} - {Name} ";
+    }
 }

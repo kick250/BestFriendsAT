@@ -1,4 +1,5 @@
 ﻿using BusinessServices;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -28,9 +29,17 @@ public class FriendsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] string value)
+    public IActionResult Create([FromBody] Friend friend)
     {
-        throw new NotImplementedException();
+        try
+        {
+            FriendsService.Create(friend);
+
+            return Ok("Esse amigo foi criado");
+        } catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
     [HttpPut("{id}")]

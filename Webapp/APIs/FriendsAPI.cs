@@ -1,6 +1,7 @@
 ﻿using Entities;
 using Infrastructure.Exceptions;
 using Newtonsoft.Json;
+using System.Net.WebSockets;
 
 namespace Webapp.APIs;
 
@@ -41,5 +42,13 @@ public class FriendsAPI : IAPI
             throw new Exception("Ocorreu um erro desconhecido");
 
         return result;
+    }
+
+    public void Create(Friend friend)
+    {
+        var response = Post("/Friends", friend).Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
     }
 }

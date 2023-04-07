@@ -7,10 +7,14 @@ namespace Webapp.Controllers;
 public class FriendsController : Controller
 {
     private FriendsAPI FriendsAPI { get; set; }
+    private ImagesAPI ImagesAPI { get; set; }
+    private StatesAPI StatesAPI { get; set; }
 
-    public FriendsController(FriendsAPI friendsAPI)
+    public FriendsController(FriendsAPI friendsAPI, StatesAPI statesAPI, ImagesAPI imagesAPI)
     {
         FriendsAPI = friendsAPI;
+        ImagesAPI = imagesAPI;
+        StatesAPI = statesAPI;
     }
 
     public ActionResult Index()
@@ -20,7 +24,7 @@ public class FriendsController : Controller
         return View(friends);
     }
 
-    public ActionResult Details(int? id)
+    public ActionResult Details(int? id) // devolver friends tbm
     {
         if (id == null) return RedirectToAction("Index");
 
@@ -31,25 +35,33 @@ public class FriendsController : Controller
 
     public ActionResult New()
     {
+        SetStates();
         return View();
     }
 
     [HttpPost]
-    public ActionResult Create()
+    public ActionResult Create([FromForm] Friend friend, [FromForm] IFormFile friendImage)
     {
         try
         {
-            return RedirectToAction(nameof(Index));
+            string imageUrl = ImagesAPI.UploadImage(friendImage);
+            friend.PhotoUrl = imageUrl;
+            FriendsAPI.Create(friend);
+
+            return RedirectToAction("Index");
         }
-        catch
+        catch (Exception ex) 
         {
-            return View();
+            SetStates();
+            ViewBag.Error = ex.Message; 
+            return View("New", friend);
         }
     }
 
     public ActionResult Edit(int id)
     {
-        return View();
+        Friend friend = FriendsAPI.GetById(id);
+        return View(friend);
     }
 
     [HttpPost]
@@ -82,4 +94,12 @@ public class FriendsController : Controller
             return View();
         }
     }
+
+    #region private 
+    private void SetStates()
+    {
+        List<State> states = StatesAPI.GetAll();
+        ViewBag.States = states;
+    }
+    #endregion
 }
