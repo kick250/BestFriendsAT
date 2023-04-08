@@ -31,6 +31,11 @@ public class FriendsService
         FriendsRepository.Create(friend);
     }
 
+    public void Update(Friend friend)
+    {
+        FriendsRepository.Update(friend);
+    }
+
     public void DeleteById(int id)
     {
         FriendsRepository.DeleteById(id);

@@ -43,9 +43,18 @@ public class FriendsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] string value)
+    public IActionResult Put(int id, [FromBody] Friend friend)
     {
-        throw new NotImplementedException();
+        try
+        {
+            friend.Id = id;
+            FriendsService.Update(friend);
+
+            return Ok(friend);
+        } catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
     [HttpDelete("{id}")]

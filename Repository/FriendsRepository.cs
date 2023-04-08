@@ -90,22 +90,22 @@ public class FriendsRepository : IRepository
         }
     }
 
-    //public void Update(int id, Friend people)
-    //{
-    //    using (var command = CreateCommand(@"UpdatePeople @Id, @Name, @LastName, @Email, @Phone, @Birthdate;"))
-    //    {
-    //        command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
-    //        command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, people.Name));
-    //        command.Parameters.Add(CreateParameter("@LastName", SqlDbType.VarChar, people.LastName));
-    //        command.Parameters.Add(CreateParameter("@Email", SqlDbType.VarChar, people.Email));
-    //        command.Parameters.Add(CreateParameter("@Phone", SqlDbType.VarChar, people.Phone));
-    //        command.Parameters.Add(CreateParameter("@Birthdate", SqlDbType.Date, people.Birthdate));
+    public void Update(Friend people)
+    {
+        using (var command = CreateCommand(@"UpdateFriend @Id, @Name, @LastName, @Email, @Phone, @Birthdate, @PhotoUrl, @StateId;"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, people.Id));
+            command.Parameters.Add(CreateParameter("@Name", SqlDbType.VarChar, people.Name));
+            command.Parameters.Add(CreateParameter("@LastName", SqlDbType.VarChar, people.LastName));
+            command.Parameters.Add(CreateParameter("@Email", SqlDbType.VarChar, people.Email));
+            command.Parameters.Add(CreateParameter("@Phone", SqlDbType.VarChar, people.Phone));
+            command.Parameters.Add(CreateParameter("@Birthdate", SqlDbType.Date, people.Birthdate));
+            command.Parameters.Add(CreateParameter("@PhotoUrl", SqlDbType.VarChar, people.PhotoUrl));
+            command.Parameters.Add(CreateParameter("@StateId", SqlDbType.Int, people.StateId));
 
-    //        command.ExecuteNonQuery();
-    //    }
-    //}
-
-    // private
+            command.ExecuteNonQuery();
+        }
+    }
 
     #region private 
     private List<Friend> ParseFriendsFromCollection(SqlDataReader friendsData)

@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 using Webapp.APIs;
 
 namespace Webapp.Controllers;
@@ -61,19 +62,27 @@ public class FriendsController : Controller
     public ActionResult Edit(int id)
     {
         Friend friend = FriendsAPI.GetById(id);
+        SetStates();
         return View(friend);
     }
 
     [HttpPost]
-    public ActionResult Update(int id)
+    public ActionResult Update(Friend friend, [FromForm] IFormFile? friendImage)
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
+        try {
+            if (friendImage != null)
+            {
+                string imageUrl = ImagesAPI.UploadImage(friendImage);
+                friend.PhotoUrl = imageUrl;
+            }
+            FriendsAPI.Update(friend);
+            return RedirectToAction("Details", new { Id = friend.Id });
         }
-        catch
+        catch (Exception ex)
         {
-            return View();
+            SetStates();
+            ViewBag.Error = ex.Message;
+            return View("Edit", friend);
         }
     }
 

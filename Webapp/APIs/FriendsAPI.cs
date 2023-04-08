@@ -52,6 +52,14 @@ public class FriendsAPI : IAPI
             throw new APIErrorException(response);
     }
 
+    public void Update(Friend friend)
+    {
+        var response = Put($"/Friends/{friend.Id}", friend).Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
+
     public void DeleteById(int id)
     {
         var response = Delete($"/Friends/{id}").Result;
