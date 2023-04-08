@@ -90,6 +90,11 @@ public class FriendsController : Controller
     public ActionResult AddFriend(int id)
     {
         List<Friend> allFriends = FriendsAPI.GetAll();
+
+        allFriends = allFriends.Where(x => 
+            x.Id != id && !x.IsFriendOf(id)
+        ).ToList();
+
         ViewBag.Id = id;
         ViewBag.Friends = allFriends;
 
@@ -98,9 +103,10 @@ public class FriendsController : Controller
 
     public ActionResult RemoveFriend(int id)
     {
-        List<Friend> allFriends = FriendsAPI.GetAll();
+        Friend friend = FriendsAPI.GetById(id);
+
         ViewBag.Id = id;
-        ViewBag.Friends = allFriends;
+        ViewBag.Friends = friend.Friends;
 
         return View();
     }

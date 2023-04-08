@@ -34,4 +34,23 @@ public class Friend
 
         return State.Name ?? "";
     }
+
+    public bool IsFriendOf(int id)
+    {
+        if (Friends == null) return false;
+
+        return FriendIds().Contains(id);
+    }
+
+    public List<int?> FriendIds()
+    {
+        List<int?> ids = new List<int?>();
+
+        if (Friends == null) return ids;    
+
+        foreach (Friend friend in Friends)
+            ids.Add(friend.Id);
+
+        return ids;
+    }
 }
