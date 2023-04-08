@@ -53,4 +53,29 @@ public class Friend
 
         return ids;
     }
+
+    public string GetCountryFlagUrl()
+    {
+        if (Country == null)
+            return "";
+
+        return Country.FlagUrl ?? "";
+    }
+
+    public string GetStateFlagUrl()
+    {
+        if (State == null)
+            return "";
+
+        return State.FlagUrl ?? "";
+    }
+
+    public string GetFormattedBirthdate()
+    {
+        if (Birthdate == null) return "";
+
+        var birthdate = DateTime.Parse(Birthdate.ToString() ?? "");
+
+        return birthdate.ToString("MM/dd/yyyy") ?? "";
+    }
 }
