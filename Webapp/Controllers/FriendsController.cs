@@ -26,7 +26,7 @@ public class FriendsController : Controller
         return View(friends);
     }
 
-    public ActionResult Details(int? id) // devolver friends tbm
+    public ActionResult Details(int? id)
     {
         if (id == null) return RedirectToAction("Index");
 

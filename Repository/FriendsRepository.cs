@@ -107,15 +107,42 @@ public class FriendsRepository : IRepository
         }
     }
 
+    public void AddFriendship(int userId, int friendId)
+    {
+        using (var command = CreateCommand(@"CreateFriendship @UserId, @FriendId;"))
+        {
+            command.Parameters.Add(CreateParameter("@UserId", SqlDbType.Int, userId));
+            command.Parameters.Add(CreateParameter("@FriendId", SqlDbType.Int, friendId));
+
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public List<Friend> GetFriendsOf(int? userId, bool endCicle = true)
+    {
+        List<Friend> friends = new List<Friend>();
+
+        using (var command = CreateCommand(@"GetFriendsOf @UserId;"))
+        {
+            command.Parameters.Add(CreateParameter("@UserId", SqlDbType.Int, userId));
+
+            var data = command.ExecuteReader();
+
+            friends = ParseFriendsFromCollection(data, endCicle);
+        }
+        
+        return friends;
+    }
+
     #region private 
-    private List<Friend> ParseFriendsFromCollection(SqlDataReader friendsData)
+    private List<Friend> ParseFriendsFromCollection(SqlDataReader friendsData, bool endCicle = false)
     {
         List<Friend> friends = new List<Friend>();
 
         if (friendsData.HasRows)
         {
             Friend? friend;
-            while ((friend = ParseFriend(friendsData)) != null)
+            while ((friend = ParseFriend(friendsData, endCicle)) != null)
             {
                 friends.Add(friend);
             }
@@ -124,7 +151,7 @@ public class FriendsRepository : IRepository
         return friends;
     }
 
-    private Friend? ParseFriend(SqlDataReader friendData)
+    private Friend? ParseFriend(SqlDataReader friendData, bool endCicle = false)
     {
         if (!friendData.Read()) return null;
 
@@ -146,6 +173,9 @@ public class FriendsRepository : IRepository
             country,
             state
         );
+
+        List<Friend> friends = !endCicle ? GetFriendsOf(friend.Id) : new List<Friend>();
+        friend.Friends = friends;
 
         return friend;
     }

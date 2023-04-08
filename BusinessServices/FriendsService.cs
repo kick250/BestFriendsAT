@@ -7,12 +7,10 @@ namespace BusinessServices;
 public class FriendsService
 {
     private FriendsRepository FriendsRepository { get; set; }
-    private FriendshipsRepository FriendshipsRepository { get; set; }
 
-    public FriendsService(FriendsRepository friendsRepository, FriendshipsRepository friendshipsRepository) 
+    public FriendsService(FriendsRepository friendsRepository) 
     {
         FriendsRepository = friendsRepository;
-        FriendshipsRepository = friendshipsRepository;
     }
 
     public List<Friend> GetAll()
@@ -35,7 +33,7 @@ public class FriendsService
 
     public void AddFriendship(int userId, int friendId)
     {
-        FriendshipsRepository.AddFriendship(userId, friendId);
+        FriendsRepository.AddFriendship(userId, friendId);
     }
 
     public void Update(Friend friend)
