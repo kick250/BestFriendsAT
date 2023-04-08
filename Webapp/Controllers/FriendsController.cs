@@ -1,7 +1,5 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using System.Reflection.Metadata.Ecma335;
 using Webapp.APIs;
 
 namespace Webapp.Controllers;

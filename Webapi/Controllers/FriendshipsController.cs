@@ -25,6 +25,8 @@ public class FriendshipsController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id, [FromQuery] int friendId)
     {
-        throw new NotImplementedException();
+        FriendsService.RemoveFriendship(id, friendId);
+
+        return Ok();
     }
 }

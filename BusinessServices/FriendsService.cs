@@ -36,6 +36,11 @@ public class FriendsService
         FriendsRepository.AddFriendship(userId, friendId);
     }
 
+    public void RemoveFriendship(int userId, int friendId)
+    {
+        FriendsRepository.RemoveFriendship(userId, friendId);
+    }
+
     public void Update(Friend friend)
     {
         FriendsRepository.Update(friend);

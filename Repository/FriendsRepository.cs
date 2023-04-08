@@ -118,6 +118,17 @@ public class FriendsRepository : IRepository
         }
     }
 
+    public void RemoveFriendship(int userId, int friendId)
+    {
+        using (var command = CreateCommand(@"DeleteFriendship @UserId, @FriendId;"))
+        {
+            command.Parameters.Add(CreateParameter("@UserId", SqlDbType.Int, userId));
+            command.Parameters.Add(CreateParameter("@FriendId", SqlDbType.Int, friendId));
+
+            command.ExecuteNonQuery();
+        }
+    }
+
     public List<Friend> GetFriendsOf(int? userId, bool endCicle = true)
     {
         List<Friend> friends = new List<Friend>();
