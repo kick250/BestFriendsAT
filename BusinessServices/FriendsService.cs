@@ -31,6 +31,11 @@ public class FriendsService
         FriendsRepository.Create(friend);
     }
 
+    public void DeleteById(int id)
+    {
+        FriendsRepository.DeleteById(id);
+    }
+
     #region private 
 
     private bool IsEmailInUse(string email)

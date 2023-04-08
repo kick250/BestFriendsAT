@@ -64,15 +64,15 @@ public class FriendsRepository : IRepository
         return friend;
     }
 
-    //public void DeleteById(int id)
-    //{
-    //    using (var command = CreateCommand("DeletePeople @Id;"))
-    //    {
-    //        command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
+    public void DeleteById(int id)
+    {
+        using (var command = CreateCommand("DeleteFriend @Id;"))
+        {
+            command.Parameters.Add(CreateParameter("@Id", SqlDbType.Int, id));
 
-    //        command.ExecuteNonQuery();
-    //    }
-    //}
+            command.ExecuteNonQuery();
+        }
+    }
 
     public void Create(Friend people)
     {

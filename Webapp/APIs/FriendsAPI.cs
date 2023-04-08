@@ -51,4 +51,12 @@ public class FriendsAPI : IAPI
         if (!response.IsSuccessStatusCode)
             throw new APIErrorException(response);
     }
+
+    public void DeleteById(int id)
+    {
+        var response = Delete($"/Friends/{id}").Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
 }

@@ -79,20 +79,16 @@ public class FriendsController : Controller
 
     public ActionResult Delete(int id)
     {
-        return View();
+        Friend friend = FriendsAPI.GetById(id);
+        return View(friend);
     }
 
     [HttpPost]
     public ActionResult Destroy(int id)
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
+        FriendsAPI.DeleteById(id);
+
+        return RedirectToAction("Index");
     }
 
     #region private 

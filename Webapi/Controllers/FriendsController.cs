@@ -51,6 +51,7 @@ public class FriendsController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        throw new NotImplementedException();
+        FriendsService.DeleteById(id);
+        return Ok();
     }
 }
