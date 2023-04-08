@@ -114,9 +114,6 @@ public class FriendsController : Controller
     [HttpPost]
     public ActionResult UpdateFriends(int id, int friendId, string action)
     {
-        if (id == friendId)
-            return RedirectToAction("Details", new { Id = id });
-
         if (action == "add")
             FriendsAPI.AddFriendship(id, friendId);
         else if (action == "remove")
