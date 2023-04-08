@@ -56,5 +56,7 @@
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a> |
+    @Html.ActionLink("Add friend", "AddFriend", new { id = Model.Id }) |
+    @Html.ActionLink("Remove friend", "RemoveFriend", new { id = Model.Id })
 </div>

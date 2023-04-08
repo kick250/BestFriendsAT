@@ -67,4 +67,20 @@ public class FriendsAPI : IAPI
         if (!response.IsSuccessStatusCode)
             throw new APIErrorException(response);
     }
+
+    public void AddFriendship(int userId, int friendId)
+    {
+        var response = Post($"/Friendships/{userId}?friendId={friendId}", new {}).Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
+
+    public void RemoveFriendship(int userId, int friendId)
+    {
+        var response = Delete($"/Friendships/{userId}?friendId={friendId}").Result;
+
+        if (!response.IsSuccessStatusCode)
+            throw new APIErrorException(response);
+    }
 }

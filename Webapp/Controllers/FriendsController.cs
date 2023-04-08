@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System.Reflection.Metadata.Ecma335;
 using Webapp.APIs;
 
@@ -84,6 +85,40 @@ public class FriendsController : Controller
             ViewBag.Error = ex.Message;
             return View("Edit", friend);
         }
+    }
+
+    public ActionResult AddFriend(int id)
+    {
+        List<Friend> allFriends = FriendsAPI.GetAll();
+        ViewBag.Id = id;
+        ViewBag.Friends = allFriends;
+
+        return View();
+    }
+
+    public ActionResult RemoveFriend(int id)
+    {
+        List<Friend> allFriends = FriendsAPI.GetAll();
+        ViewBag.Id = id;
+        ViewBag.Friends = allFriends;
+
+        return View();
+    }
+
+    [HttpPost]
+    public ActionResult UpdateFriends(int id, int friendId, string action)
+    {
+        if (id == friendId)
+            return RedirectToAction("Details", new { Id = id });
+
+        if (action == "add")
+            FriendsAPI.AddFriendship(id, friendId);
+        else if (action == "remove")
+            FriendsAPI.RemoveFriendship(id, friendId);
+        else
+            return RedirectToAction("Index");
+
+        return RedirectToAction("Details", new { Id = id });
     }
 
     public ActionResult Delete(int id)
